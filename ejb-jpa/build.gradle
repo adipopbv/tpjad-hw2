@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'ejb-jpa'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.1'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0'
+    implementation group: 'jakarta.ejb', name: 'jakarta.ejb-api', version: '4.0.1'
+    implementation group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.6.15.Final'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+}
+
+project.ext {
+    glassfish = "D:\\University\\tpjad\\hw2\\servers\\glassfish\\glassfish7\\glassfish\\domains\\domain1\\autodeploy"
+    wildfly = "D:\\University\\tpjad\\hw2\\servers\\wildfly\\wildfly-31.0.0.Final\\standalone\\deployments"
+}
+
+task deployGlassfish(type: Copy) {
+    group "build"
+    dependsOn("war")
+
+    from "${buildDir}/libs"
+    into project.glassfish
+}
+
+task deployWildfly(type: Copy) {
+    group "build"
+    dependsOn("war", "cleanWildfly")
+
+    from "${buildDir}/libs"
+    into project.wildfly
+}
+
+task cleanGlassfish(type: Delete) {
+    delete fileTree(project.glassfish)
+}
+
+task cleanWildfly(type: Delete) {
+    delete fileTree(project.wildfly)
+}
