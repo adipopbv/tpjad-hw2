@@ -4,8 +4,8 @@ import dto.GreenhouseDTO;
 import dto.PlantDTO;
 import entities.Greenhouse;
 import entities.Plant;
-import interfaces.FacadeService;
-import interfaces.FacadeServiceRemote;
+import interfaces.AppServiceLocal;
+import interfaces.AppServiceRemote;
 
 import jakarta.ejb.Local;
 import jakarta.ejb.Remote;
@@ -17,10 +17,10 @@ import jakarta.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@Stateless(name = "FacadeServiceBean")
-@Local(FacadeService.class)
-@Remote(FacadeServiceRemote.class)
-public class FacadeServiceBean implements FacadeService, FacadeServiceRemote {
+@Stateless(name = "AppServiceBean")
+@Local(AppServiceLocal.class)
+@Remote(AppServiceRemote.class)
+public class AppServiceBean implements AppServiceLocal, AppServiceRemote {
     @PersistenceContext(unitName = "test")
     private EntityManager entityManager;
 
@@ -137,7 +137,7 @@ public class FacadeServiceBean implements FacadeService, FacadeServiceRemote {
     @Override
     public Collection<PlantDTO> getAllPlantsR() {
         return getAllPlants().stream()
-                .map(FacadeServiceBean::plantToDTO)
+                .map(AppServiceBean::plantToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -149,14 +149,14 @@ public class FacadeServiceBean implements FacadeService, FacadeServiceRemote {
     @Override
     public Collection<PlantDTO> findPlantsDTOForGreenhouse(Long id) {
         return findPlantsForGreenhouse(id).stream()
-                .map(FacadeServiceBean::plantToDTO)
+                .map(AppServiceBean::plantToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Collection<GreenhouseDTO> getAllGreenhousesR() {
         return getAllGreenhouses().stream()
-                .map(FacadeServiceBean::greenhouseToDTO)
+                .map(AppServiceBean::greenhouseToDTO)
                 .collect(Collectors.toList());
     }
 }

@@ -29,7 +29,7 @@ project.ext {
 
 task deployGlassfish(type: Copy) {
     group "build"
-    dependsOn("war")
+    dependsOn("clean", "war", "cleanGlassfish")
 
     from "${buildDir}/libs"
     into project.glassfish
@@ -37,7 +37,7 @@ task deployGlassfish(type: Copy) {
 
 task deployWildfly(type: Copy) {
     group "build"
-    dependsOn("war", "cleanWildfly")
+    dependsOn("clean", "war", "cleanWildfly")
 
     from "${buildDir}/libs"
     into project.wildfly

@@ -2,7 +2,7 @@ package client;
 
 import entities.Greenhouse;
 import entities.Plant;
-import interfaces.FacadeService;
+import interfaces.AppServiceLocal;
 
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,7 @@ import java.util.List;
 public class StorePlant extends HttpServlet {
 
     @EJB
-    private FacadeService facadeService;
+    private AppServiceLocal appServiceLocal;
 
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -35,16 +35,16 @@ public class StorePlant extends HttpServlet {
             e.printStackTrace();
         }
 
-        facadeService.getAllPlants();
+        appServiceLocal.getAllPlants();
 
         // check if greenhouse already exists and has plants
-        Greenhouse greenhouse = facadeService.findGreenhouseByName(greenhouseName);
+        Greenhouse greenhouse = appServiceLocal.findGreenhouseByName(greenhouseName);
 
         if (greenhouse == null) {
-            greenhouse = facadeService.createGreenhouse(greenhouseName);
+            greenhouse = appServiceLocal.createGreenhouse(greenhouseName);
         }
 
-        facadeService.createPlant(greenhouse.getGreenhouseId(), plantName, height);
+        appServiceLocal.createPlant(greenhouse.getGreenhouseId(), plantName, height);
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -59,7 +59,7 @@ public class StorePlant extends HttpServlet {
         out.println("</h3>");
         out.println("<ul>");
         List<Plant> releasedRecords = new ArrayList<>(
-                facadeService.findPlantsForGreenhouse(facadeService.findGreenhouseByName(greenhouseName).getGreenhouseId()));
+                appServiceLocal.findPlantsForGreenhouse(appServiceLocal.findGreenhouseByName(greenhouseName).getGreenhouseId()));
         for (Plant p : releasedRecords) {
             if (p.getGreenhouse().getName().equals(greenhouse.getName())) {
                 out.println("<li>");

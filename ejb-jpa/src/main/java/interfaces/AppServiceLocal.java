@@ -7,7 +7,7 @@ import jakarta.ejb.Local;
 import java.util.Collection;
 
 @Local
-public interface FacadeService {
+public interface AppServiceLocal {
     Plant createPlant(Long plantId, String name, int height);
 
     Greenhouse createGreenhouse(String name);

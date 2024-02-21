@@ -7,7 +7,7 @@ import jakarta.ejb.Remote;
 import java.util.Collection;
 
 @Remote
-public interface FacadeServiceRemote {
+public interface AppServiceRemote {
     PlantDTO createPlantR(Long plantId, String name, int height);
 
     GreenhouseDTO createGreenhouseR(String name);
