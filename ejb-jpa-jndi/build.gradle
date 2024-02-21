@@ -15,11 +15,15 @@ repositories {
 dependencies {
     implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.1'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
-    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0'
     implementation group: 'jakarta.ejb', name: 'jakarta.ejb-api', version: '4.0.1'
-    implementation group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.6.15.Final'
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+}
+
+jar {
+    manifest {
+        attributes('Main-Class': 'clients.Client')
+    }
+    from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) })
 }
 
 project.ext {
@@ -29,7 +33,7 @@ project.ext {
 
 task deployGlassfish(type: Copy) {
     group "build"
-    dependsOn("war")
+//    dependsOn("clean", "war", "cleanGlassfish")
 
     from "${buildDir}/libs"
     into project.glassfish
@@ -37,7 +41,7 @@ task deployGlassfish(type: Copy) {
 
 task deployWildfly(type: Copy) {
     group "build"
-    dependsOn("war", "cleanWildfly")
+    dependsOn("clean", "war", "cleanWildfly")
 
     from "${buildDir}/libs"
     into project.wildfly

@@ -1,35 +1,33 @@
 package client;
 
-import entities.Greenhouse;
-import entities.Plant;
-import interfaces.FacadeServiceRemote;
+import dto.PlantDTO;
+import dto.GreenhouseDTO;
+import interfaces.AppServiceRemote;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 public class StorePlant extends HttpServlet {
 
-    private final Properties JNDIProps;
-    private final Context context;
-    private final FacadeServiceRemote facadeServiceRemote;
+    private final AppServiceRemote appServiceRemote;
 
     public StorePlant() throws NamingException {
-        JNDIProps = new Properties();
-        JNDIProps.put("java.naming.factory.initial", "com.sun.enterprise.naming.impl.SerialInitContextFactory");
-        JNDIProps.put("org.omg.CORBA.ORBInitialHost", "localhost");
-        JNDIProps.put("org.omg.CORBA.ORBInitialPort", "3700");
-        context = new InitialContext(JNDIProps);
-        facadeServiceRemote = (FacadeServiceRemote) context.lookup("java:global/ejb-jpa-1.0/FacadeServiceBean!interfaces.FacadeServiceRemote");
+//        Properties JNDIProps = new Properties();
+//        JNDIProps.put("java.naming.factory.initial", "com.sun.enterprise.naming.impl.SerialInitContextFactory");
+//        JNDIProps.put("org.omg.CORBA.ORBInitialHost", "localhost");
+//        JNDIProps.put("org.omg.CORBA.ORBInitialPort", "3700");
+        InitialContext context = new InitialContext();
+        appServiceRemote = (AppServiceRemote) context.lookup("java:global/ejb-jpa-1.0/FacadeServiceBean!interfaces.FacadeServiceRemote");
     }
 
     protected void doGet(HttpServletRequest request,
@@ -49,13 +47,13 @@ public class StorePlant extends HttpServlet {
         }
 
         // check if greenhouse already exists and has plants
-        Greenhouse greenhouse = facadeServiceRemote.findGreenhouseByName(greenhouseName);
+        GreenhouseDTO greenhouse = appServiceRemote.findGreenhouseDTOByName(greenhouseName);
 
         if (greenhouse == null) {
-            greenhouse = facadeServiceRemote.createGreenhouse(greenhouseName);
+            greenhouse = appServiceRemote.createGreenhouseR(greenhouseName);
         }
 
-        facadeServiceRemote.createPlant(greenhouse.getGreenhouseId(), plantName, height);
+        appServiceRemote.createPlantR(greenhouse.getGreenhouseId(), plantName, height);
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -69,10 +67,10 @@ public class StorePlant extends HttpServlet {
         out.println(greenhouseName);
         out.println("</h3>");
         out.println("<ul>");
-        List<Plant> releasedRecords = new ArrayList<>(
-                facadeServiceRemote.findPlantsForGreenhouse(facadeServiceRemote.findGreenhouseByName(greenhouseName).getGreenhouseId()));
-        for (Plant p : releasedRecords) {
-            if (p.getGreenhouse().getName().equals(greenhouse.getName())) {
+        List<PlantDTO> plants = new ArrayList<>(
+                appServiceRemote.findPlantsDTOForGreenhouse(appServiceRemote.findGreenhouseDTOByName(greenhouseName).getGreenhouseId()));
+        for (PlantDTO p : plants) {
+            if (Objects.equals(p.getGreenhouseId(), greenhouse.getGreenhouseId())) {
                 out.println("<li>");
                 out.println(p.getName() + ": " + p.getHeight());
                 out.println("</li>");
