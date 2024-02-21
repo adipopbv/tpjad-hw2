@@ -1,9 +1,8 @@
 plugins {
     id 'java'
-    id 'war'
 }
 
-group 'ejb-jpa'
+group 'ejb-jpa-jndi'
 version '1.0'
 
 sourceCompatibility = 1.8
@@ -20,37 +19,9 @@ dependencies {
 }
 
 jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
-        attributes('Main-Class': 'clients.Client')
+        attributes('Main-Class': 'client.Client')
     }
     from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) })
-}
-
-project.ext {
-    glassfish = "D:\\University\\tpjad\\hw2\\servers\\glassfish\\glassfish7\\glassfish\\domains\\domain1\\autodeploy"
-    wildfly = "D:\\University\\tpjad\\hw2\\servers\\wildfly\\wildfly-31.0.0.Final\\standalone\\deployments"
-}
-
-task deployGlassfish(type: Copy) {
-    group "build"
-//    dependsOn("clean", "war", "cleanGlassfish")
-
-    from "${buildDir}/libs"
-    into project.glassfish
-}
-
-task deployWildfly(type: Copy) {
-    group "build"
-    dependsOn("clean", "war", "cleanWildfly")
-
-    from "${buildDir}/libs"
-    into project.wildfly
-}
-
-task cleanGlassfish(type: Delete) {
-    delete fileTree(project.glassfish)
-}
-
-task cleanWildfly(type: Delete) {
-    delete fileTree(project.wildfly)
 }
