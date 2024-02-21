@@ -15,7 +15,6 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Stateless(name = "FacadeServiceBean")
 @Local(FacadeService.class)
@@ -112,51 +111,5 @@ public class FacadeServiceBean implements FacadeService, FacadeServiceRemote {
     public Collection<Greenhouse> getAllGreenhouses() {
         TypedQuery<Greenhouse> query = entityManager.createQuery("SELECT R FROM Greenhouse R", Greenhouse.class);
         return query.getResultList();
-    }
-
-    @Override
-    public PlantDTO createPlantR(Long plantId, String name, int height) {
-        return plantToDTO(createPlant(plantId, name, height));
-    }
-
-    @Override
-    public GreenhouseDTO createGreenhouseR(String name) {
-        return greenhouseToDTO(createGreenhouse(name));
-    }
-
-    @Override
-    public PlantDTO findPlantR(Object id) {
-        return plantToDTO(findPlant(id));
-    }
-
-    @Override
-    public GreenhouseDTO findGreenhouseR(Object id) {
-        return greenhouseToDTO(findGreenhouse(id));
-    }
-
-    @Override
-    public Collection<PlantDTO> getAllPlantsR() {
-        return getAllPlants().stream()
-                .map(FacadeServiceBean::plantToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public GreenhouseDTO findGreenhouseDTOByName(String name) {
-        return greenhouseToDTO(findGreenhouseByName(name));
-    }
-
-    @Override
-    public Collection<PlantDTO> findPlantsDTOForGreenhouse(Long id) {
-        return findPlantsForGreenhouse(id).stream()
-                .map(FacadeServiceBean::plantToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<GreenhouseDTO> getAllGreenhousesR() {
-        return getAllGreenhouses().stream()
-                .map(FacadeServiceBean::greenhouseToDTO)
-                .collect(Collectors.toList());
     }
 }
