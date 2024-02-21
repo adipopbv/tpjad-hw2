@@ -19,8 +19,11 @@ public class ClientHtml extends HttpServlet {
                 "<body>\n" +
                 "<form method=\"GET\"action=\"\">\n" +
                 "Greenhouse name:<input type=\"text\"name=\"greenhouseName\">\n" +
+                "<br>" +
                 "Plant name:<input type=\"text\"name=\"plantName\">\n" +
+                "<br>" +
                 "Plant height:<input type=\"number\"name=\"height\">\n" +
+                "<br>" +
                 "</select>" +
                 "<input type=\"submit\"value=\"Add plant\"/>\n" +
                 "</form>\n" +

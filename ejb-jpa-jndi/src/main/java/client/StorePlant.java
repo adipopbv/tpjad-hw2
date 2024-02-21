@@ -22,12 +22,9 @@ public class StorePlant extends HttpServlet {
     private final AppServiceRemote appServiceRemote;
 
     public StorePlant() throws NamingException {
-//        Properties JNDIProps = new Properties();
-//        JNDIProps.put("java.naming.factory.initial", "com.sun.enterprise.naming.impl.SerialInitContextFactory");
-//        JNDIProps.put("org.omg.CORBA.ORBInitialHost", "localhost");
-//        JNDIProps.put("org.omg.CORBA.ORBInitialPort", "3700");
+        // for Glassfish
         InitialContext context = new InitialContext();
-        appServiceRemote = (AppServiceRemote) context.lookup("java:global/ejb-jpa-1.0/FacadeServiceBean!interfaces.FacadeServiceRemote");
+        appServiceRemote = (AppServiceRemote) context.lookup("java:global/ejb-jpa-1.0/AppServiceBean!interfaces.AppServiceRemote");
     }
 
     protected void doGet(HttpServletRequest request,

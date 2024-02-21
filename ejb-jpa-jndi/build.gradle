@@ -6,8 +6,6 @@ plugins {
 group 'ejb-jpa'
 version '1.0'
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
@@ -33,7 +31,7 @@ project.ext {
 
 task deployGlassfish(type: Copy) {
     group "build"
-//    dependsOn("clean", "war", "cleanGlassfish")
+    dependsOn("clean", "war")
 
     from "${buildDir}/libs"
     into project.glassfish
@@ -41,7 +39,7 @@ task deployGlassfish(type: Copy) {
 
 task deployWildfly(type: Copy) {
     group "build"
-    dependsOn("clean", "war", "cleanWildfly")
+    dependsOn("clean", "war")
 
     from "${buildDir}/libs"
     into project.wildfly
