@@ -22,7 +22,6 @@ public class StorePlant extends HttpServlet {
     private final AppServiceRemote appServiceRemote;
 
     public StorePlant() throws NamingException {
-        // for Glassfish
         InitialContext context = new InitialContext();
         appServiceRemote = (AppServiceRemote) context.lookup("java:global/ejb-jpa-1.0/AppServiceBean!interfaces.AppServiceRemote");
     }

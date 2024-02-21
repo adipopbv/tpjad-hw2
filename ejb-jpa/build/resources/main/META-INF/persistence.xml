@@ -5,9 +5,9 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="test" transaction-type="JTA">
         <!-- For Glassfish -->
-        <jta-data-source>jdbc/PostgresDS</jta-data-source>
+        <!--        <jta-data-source>jdbc/PostgresDS</jta-data-source>-->
         <!-- For Wildfly -->
-        <!--        <jta-data-source>java:jboss/datasources/PostgresDS</jta-data-source>-->
+        <jta-data-source>java:jboss/datasources/PostgresDS</jta-data-source>
 
         <class>entities.Greenhouse</class>
         <class>entities.Plant</class>
@@ -15,7 +15,7 @@
             <property name="hibernate.hbm2ddl.auto"
                       value="update"/>
             <property name="eclipselink.ddl-generation"
-                      value="create-or-extend-tables" />
+                      value="create-or-extend-tables"/>
         </properties>
     </persistence-unit>
 </persistence>
